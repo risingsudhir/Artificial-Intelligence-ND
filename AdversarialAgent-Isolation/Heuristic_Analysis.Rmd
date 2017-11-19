@@ -1,0 +1,70 @@
+---
+title: "Isolation Heuristic Analysis"
+output: pdf_document
+---
+
+## Heuristics
+This section outlines the three heuristics used in the Isolation game.
+
+### Heuristic 1 (Custom)
+This heuristic is based on player's move imbalance and keeping distance from the opponent. Heuristic calculates the move imbalance by finding total moves available for the player and it's opponent. Imbalance is calculated as below: 
+
+Move Imbalance =  my_moves / (my_moves + opponent_moves)
+
+Distance from opponent is calculated by measuring the Manhattan distance from opponent's location.
+
+Heuristic score is based on the move that maximises the imbalance in the favour of current player by maintaining maximum possible distance from the opponent.
+
+heuristic score = imbalance * distance
+
+
+### Heuristic 2 (Custom_2)
+This heuristic is based on player's move imbalance and tracking the opponent closely. Heuristic calculates the move imbalance by finding total moves available for the player and it's opponent. Imbalance is calculated as below: 
+
+Move Imbalance =  my_moves / (my_moves + opponent_moves)
+
+Distance from opponent is calculated my measuring the Euclidean distance from opponent's location.
+
+Heuristic score is based on the move that maximises the imbalance in the favour of current player by maintaining nearest possible distance from the opponent.
+
+heuristic score = imbalance * ( 1- distance / max_euclidean_distance)
+
+where max_euclidean_distance is the diagnonal of the game board.
+
+
+### Heuristic 3 (Custom_3)
+This heuristic is a variant of the first heuristic.
+
+It measures the distance from opponent by calculating Euclidean distance from opponent's location, instead of Manhattan distance.
+
+Heuristic score is based on the move that maximises the imbalance in the favour of current player by maintaining maximum possible Euclidean distance from the opponent.
+
+heuristic score = imbalance * distance
+
+
+## Results
+Results are analysed over 30 tournaments, with each tournament consisting of 7 games with different opponents. 
+All three heuristics are performing better than the heuristic that maximises the differences in the move between the player and the opponent.
+
+On average, heuristic #1 is performing better than other heursitics. Keeping maximum distance from the opponent results in higher chances of win as two players will not be in a competition to occupy the positions around them. 
+
+Below is the summary of tournament results.
+
+```{r echo = False}
+library(ggplot2)
+library(knitr)
+
+result <- read.csv(file = "logs/results.csv",stringsAsFactors = FALSE)
+
+kable(result, "Tournament Results")
+
+```
+
+```{r echo = False}
+summary <- read.csv(file = "logs/results_summary.csv",stringsAsFactors = FALSE)
+
+rownames(summary) <- c("Min", "Max", "Median", "Average")
+
+kable(summary[, c(-1)], "Tournament Results Summary")
+
+```
