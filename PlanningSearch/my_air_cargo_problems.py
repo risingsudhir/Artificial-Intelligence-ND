@@ -224,9 +224,16 @@ class AirCargoProblem(Problem):
         conditions by ignoring the preconditions required for an action to be
         executed.
         """
-        
-        # return the path cost 
-        return node.path_cost
+        kb = PropKB()
+
+        # Add the current state's positive sentence's clauses to the propositional logic KB
+        kb.tell(decode_state(node.state, self.state_map).pos_sentence())
+
+        count = 0
+        for clause in self.goal:
+            if clause not in kb.clauses:
+                count += 1
+        return count
 
 
 def air_cargo_p1() -> AirCargoProblem:

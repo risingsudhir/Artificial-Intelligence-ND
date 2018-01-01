@@ -318,6 +318,8 @@ class PlanningGraph():
                         
         for action in self.all_actions: 
             
+            if action.precond_pos.issubset()
+            
             valid_action = True
             
             for precond in action.precond_pos:
@@ -335,7 +337,8 @@ class PlanningGraph():
                 self.a_levels[level].add(a_level_node)
                 
                 for literal in self.s_levels[level - 1]:
-                    literal.add(a_level_node)
+                    literal.children.add(a_level_node)
+                    a_level_node.parents.add(literal)
                 
         
 
@@ -424,19 +427,16 @@ class PlanningGraph():
         """
         
         # two actions are inconsitents when one action negates the effect of other
-        mutex = False
-        
+                
         for effect1 in node_a1.action.effect_add:
             if effect1 in node_a2.action.effect_rem:
-                mutex = True
-                break
+                return True
             
-        for effect2 in node_a1.action.effect_add:
+        for effect2 in node_a2.action.effect_add:
             if effect2 in node_a1.action.effect_rem:
-                mutex = True
-                break
+                return True
                 
-        return mutex
+        return False
 
     def interference_mutex(self, node_a1: PgNode_a, node_a2: PgNode_a) -> bool:
         """
@@ -455,20 +455,16 @@ class PlanningGraph():
         
         # two actions are interference if one of the effects of one action is the negation
         # of the precondition of other
-        
-        mutex = True
-        
+                        
         for effect1 in node_a1.action.effect_add:
             if effect1 in node_a2.action.precond_neg:
-                mutex = False
-                break
+                return True
             
         for effect2 in node_a2.action.effect_add:
             if effect2 in node_a1.action.precond_neg:
-                mutex = False
-                break
+                return True
         
-        return mutex
+        return False
                 
 
     def competing_needs_mutex(self, node_a1: PgNode_a, node_a2: PgNode_a) -> bool:
@@ -484,20 +480,16 @@ class PlanningGraph():
 
         # two actions are competing needs if one of the preconditions of one action
         # is mutually exclusive with a precondition of the other
-        
-        mutex = False
-        
+                        
         for precond1 in node_a1.action.precond_pos:
             if precond1 in node_a2.action.precond_neg:
-                mutex = True
-                break
-        
+                return True
+                        
         for precond2 in node_a2.action.precond_pos:
             if precond2 in node_a1.action.precond_neg:
-                mutex = True
-                break
+                return True
         
-        return mutex
+        return False
                 
 
     def update_s_mutex(self, nodeset: set):
@@ -557,7 +549,15 @@ class PlanningGraph():
         # a inconsistent support mutex relation holds between two literals at the same 
         # level if one is the negation of the order or if each possible pair of actions 
         # that could achieve the two literals is mutually exclusive
-        return node_s1.is_mutex(node_s2)
+        
+        for precond_s1 in node_s1.parents:
+            for precond_s2 in node_s2.parents:
+                if not precond_s1.is_mutex(precond_s2):
+                    return False
+        
+        return True
+        
+        #return node_s1.is_mutex(node_s2) and node_s2.is_mutex(node_s1)
 
 
     def h_levelsum(self) -> int:
@@ -565,7 +565,18 @@ class PlanningGraph():
 
         :return: int
         """
-        level_sum = len(self.a_levels) + len(self.s_levels)
-        # TODO implement
-        # for each goal in the problem, determine the level cost, then add them together
+        
+        level_sum = 0
+        # For each goal in the problem, determine their level cost, then add them together
+        for goal in self.problem.goal:
+            goal_found = False
+            for level in range(len(self.s_levels)):
+                for state in self.s_levels[level]:
+                    if goal == state.literal:
+                        goal_found = True
+                        level_sum += level
+                        break
+                if goal_found:
+                    break
+                
         return level_sum
