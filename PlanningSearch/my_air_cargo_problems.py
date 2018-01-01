@@ -55,6 +55,7 @@ class AirCargoProblem(Problem):
             """
             loads = []
             
+            # build ground actions for loading all carogos to all airplanes, at all airports
             for cargo in self.cargos: 
                 for plane in self.planes:
                     for port in self.airports:
@@ -81,6 +82,7 @@ class AirCargoProblem(Problem):
             """
             unloads = []
             
+            # build ground actions for un-loading all cargos from all airplanes, at all airports
             for cargo in self.cargos: 
                 for plane in self.planes:
                     for port in self.airports:
@@ -225,14 +227,17 @@ class AirCargoProblem(Problem):
         executed.
         """
         kb = PropKB()
-
-        # Add the current state's positive sentence's clauses to the propositional logic KB
         kb.tell(decode_state(node.state, self.state_map).pos_sentence())
-
+        
+        # This heuristic returns all actions required to achieve the goal
+        # from current state, assuming direct execution of action with no-preconditions on it. 
+        # This is auto generated heuristic by relaxing the problem constraint
+       
         count = 0
         for clause in self.goal:
             if clause not in kb.clauses:
                 count += 1
+                
         return count
 
 
