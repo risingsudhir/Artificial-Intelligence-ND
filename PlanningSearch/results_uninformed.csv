@@ -1,0 +1,10 @@
+Problem,Algorithm,Node Expansions,Goal Tests,New Nodes,Plan Length,Search Time (Seconds),Optimal
+P-1,Breath-First-Search,43,56,180,6,0.05537,Yes
+P-1,Depth-First-Search,21,22,84,20,0.02622,No
+P-1,Uniform-Cost-Search,55,57,224,6,0.06824,Yes
+P-2,Breath-First-Search,3346,4612,30534,9,14.71962,Yes
+P-2,Depth-First-Search,107,108,959,105,0.55493,No
+P-2,Uniform-Cost-Search,4853,4855,44041,9,20.65752,Yes
+P-3,Breath-First-Search,14120,17673,124926,12,72.21721,Yes
+P-3,Depth-First-Search,292,293,2388,288,1.9524,No
+P-3,Uniform-Cost-Search,18223,18225,159618,12,90.61325,Yes

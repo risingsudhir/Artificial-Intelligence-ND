@@ -1,0 +1,7 @@
+Problem,Algorithm,Node Expansions,Goal Tests,New Nodes,Plan Length,Search Time (Seconds),Optimal
+P-1,A*-Relaxed-Heuristic,41,43,170,6,0.07037,Yes
+P-1,A*-Graph-Plan,11,13,50,6,1.82244,Yes
+P-2,A*-Relaxed-Heuristic,1450,1452,13303,9,7.83035,Yes
+P-2,A*-Graph-Plan,86,88,841,9,318.069101,Yes
+P-3,A*-Relaxed-Heuristic,5040,5042,44944,12,30.00593,Yes
+P-3,A*-Graph-Plan,325,327,3002,12,1824.00873,Yes
